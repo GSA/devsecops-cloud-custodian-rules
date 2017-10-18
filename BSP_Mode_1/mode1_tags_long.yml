@@ -17,11 +17,10 @@ policies:
       - or: *tag-compliance-filters
     actions:
       - type: notify
-        from: brian.k.fitzwater@saic.com
-        to:
-          - brian.k.fitzwater@saic.com
+        from: {{ from_address }}
+        to: {{ to_addresses }}
         subject: "Missing Required Tags"
         template: default
         transport:
           type: sns
-          topic: arn:aws:sns:us-east-1:746411188540:FitzDevOps
+          topic: {{ topic_arn }}
