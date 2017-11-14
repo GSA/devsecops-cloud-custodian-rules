@@ -1,0 +1,26 @@
+vars:
+  tag-filters: &tag-compliance-filters
+    - "tag:Application Type": absent
+    - "tag:Backups Required": absent
+    - "tag:Customer": absent
+    - "tag:Environment": absent
+    - "tag:FISMA System": absent
+    - "tag:GSA Tenant": absent
+    - "tag:AWS Instance Type": absent
+    - "tag:Os Type": absent
+    - "tag:Responsible SSO": absent
+
+policies:
+  - name: tag-compliance
+    resource: ec2
+    filters:
+      - or: *tag-compliance-filters
+    actions:
+      - type: notify
+        from: {{ from_address }}
+        to: {{ to_addresses }}
+        subject: "Missing Required Tags"
+        template: default
+        transport:
+          type: sns
+          topic: {{ topic_arn }}
