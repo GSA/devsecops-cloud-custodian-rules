@@ -1,0 +1,26 @@
+#Require encryption for objects Find elb/s3 logs sinks and switch to lambda
+policy:
+- name: s3-require-encryption
+  resource: s3
+  description: Apply encryption required policy to new buckets
+  mode:
+    type: cloudtrail
+    events:
+      - CreateBucket
+  actions:
+    - encryption-policy
+    - encrypt-keys name: 
+    
+- name: s3-remediate
+  resource: s3
+  description: Encryption required policy
+  mode:
+    type: periodic
+    schedule: rate(1 day)
+  filters:
+    - type: is-log-target
+  actions:
+    - attach-encrypt
+    - type: remove-statements
+      statement_ids:
+      - RequireEncryptedPutObject
