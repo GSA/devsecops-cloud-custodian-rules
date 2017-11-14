@@ -1,14 +1,14 @@
 vars:
   tag-filters: &tag-compliance-filters
-    - "tag:Application Type": absent
-    - "tag:Backups Required": absent
-    - "tag:Customer": absent
-    - "tag:Environment": absent
-    - "tag:FISMA System": absent
-    - "tag:GSA Tenant": absent
-    - "tag:AWS Instance Type": absent
-    - "tag:Os Type": absent
-    - "tag:Responsible SSO": absent
+    - "tag:app_type": absent
+    - "tag:backups": absent
+    - "tag:customer": absent
+    - "tag:environment": absent
+    - "tag:fisma": absent
+    - "tag:gsa_tenant": absent
+    - "tag:instance_type": absent
+    - "tag:ostype": absent
+    - "tag:sso": absent
 
 policies:
   - name: tag-compliance
