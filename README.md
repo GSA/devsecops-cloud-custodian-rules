@@ -36,9 +36,6 @@ Examples:
 Cloud custodian requires [python, pip, virtualenv](https://virtualenv.pypa.io/en/stable/installation/) on client machine or [with docker using `docker exec` or `docker run`](https://github.com/capitalone/cloud-custodian/blob/master/Dockerfile) 
 
 ```
-
-## Quick Start
-```
 $ virtualenv --python=python2 custodian
 $ source custodian/bin/activate
 (custodian) $ pip install c7n aws-cli
