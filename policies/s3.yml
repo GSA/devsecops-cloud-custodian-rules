@@ -1,5 +1,11 @@
-#Require encryption for objects Find elb/s3 logs sinks and switch to lambda
-policy:
+# Simple Storage Service (s3) Policies
+
+policies:
+
+####################################
+#####    Compliance Policies   #####
+####################################
+
 - name: s3-require-encryption
   resource: s3
   description: Apply encryption required policy to new buckets
@@ -24,3 +30,11 @@ policy:
     - type: remove-statements
       statement_ids:
       - RequireEncryptedPutObject
+
+######################################
+#####    Cost Savings Policies   #####
+######################################
+
+################################
+#####    Backup Policies   #####
+################################      

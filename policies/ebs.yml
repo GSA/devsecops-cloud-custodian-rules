@@ -1,0 +1,37 @@
+# Elastic Block Storage (EBS) Policies
+policies:
+
+####################################
+#####    Compliance Policies   #####
+####################################
+
+- name: instance-without-encrypted-ebs
+  description: Instances without encrypted EBS volumes
+  resource: ebs
+  filters:
+    - Encrypted: false
+    - "State.Name": running
+
+- name: ebs-copy-instance-tags
+  resource: ebs
+  filters:
+  - type: value
+  key: "Attachments[0].Device"
+  value: not-null
+  actions:
+  - type: copy-instance-tags
+  tags:
+  - App
+  - Env
+  - Owner
+  - Name
+
+######################################
+#####    Cost Savings Policies   #####
+######################################
+
+
+
+################################
+#####    Backup Policies   #####
+################################
