@@ -5,7 +5,7 @@ policies:
 #####    Compliance Policies   #####
 ####################################
 
-- name: find-sgs-with-ingress-or-egress-with-default-groupname
+- name: iam-sgs-with-ingress-or-egress-with-default-groupname
   resource: security-group
   filters:
    - type: value
@@ -28,7 +28,7 @@ policies:
       type: sns
       topic: arn:aws:sns:us-east-1:111111111:topic-ops
 
-- name: password-policy-check
+- name: iam-password-policy-check
   resource: account
   description: Verifies password policy on account meets our requirements and notifies if not
   region: us-east-1

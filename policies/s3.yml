@@ -6,6 +6,10 @@ policies:
 #####    Compliance Policies   #####
 ####################################
 
+
+#####################################
+#####    Operational Policies   #####
+#####################################      
 - name: s3-require-encryption
   resource: s3
   description: Apply encryption required policy to new buckets
@@ -15,8 +19,8 @@ policies:
       - CreateBucket
   actions:
     - encryption-policy
-    - encrypt-keys name: 
-    
+    - encrypt-keys
+
 - name: s3-remediate
   resource: s3
   description: Encryption required policy
@@ -30,11 +34,3 @@ policies:
     - type: remove-statements
       statement_ids:
       - RequireEncryptedPutObject
-
-######################################
-#####    Cost Savings Policies   #####
-######################################
-
-################################
-#####    Backup Policies   #####
-################################      

@@ -6,22 +6,29 @@ policies:
 #####    Compliance Policies   #####
 ####################################
 
-- name: require-rds-encrypt-and-non-public
+
+
+#####################################
+#####    Operational Policies   #####
+##################################### 
+
+- name: rds-terminate-unencrypted-public
+  description: |
+    Terminate all unencrypted or publicly available RDS upon creation
   resource: rds
   mode:
-    - type: cloudtrail
-    - events:
+    type: cloudtrail
+    events:
       - CreateDBInstance
   filters:
     - or:
-      - Encrypted: false
-      - PubliclyAvailable: true
+        - StorageEncrypted: false
+        - PubliclyAccessible: true
   actions:
     - type: delete
       skip-snapshot: true
 
-
-- name: rds-prd-multi-az-remediate
+- name: rds-prod-multi-az-remediate
   resource: rds
   description: |
     Notify on all Prod RDS Instances that are Not Multi AZ setup.
@@ -34,15 +41,7 @@ policies:
   filters:
     - type: value
       key: 'tag:Environment'
-      value: '^pro?d'
+      value: '^prod'
       op: regex
     - MultiAZ: false
   #actions:   
-
-######################################
-#####    Cost Savings Policies   #####
-######################################
-
-################################
-#####    Backup Policies   #####
-################################  

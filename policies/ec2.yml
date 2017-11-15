@@ -5,7 +5,7 @@ policies:
 #####    Compliance Policies   #####
 ####################################
 
-- name: ec2-auto-tag-user
+- name: ec2-auto-tag-user-who-created-instance
   resource: ec2
   description: |
     Tag any new instance with the
@@ -18,10 +18,10 @@ policies:
     - tag:CreatorName: absent
   actions:
     - type: auto-tag-user
-      tag: CreatorName
+      tag: Resource Contact
       principal_id_tag: CreatorId
 
-- name: ec2-tag-compliance
+- name: ec2-organization-tag-compliance
   resource: ec2
   comment: Report on total count of non compliant instances
   filters:
@@ -33,10 +33,10 @@ policies:
       - "State.Name": terminated
 
 ######################################
-#####    Cost Savings Policies   #####
+#####    Operational Policies   ######
 ######################################
 
-- name: ec2-destroy-tag-staging-after-x-days
+- name: ec2-destroy-tag-stagingORdev-after-x-days
   resource: ec2
   comment: Report dev or staging instances not terminated within 7 days
   filters:
@@ -48,6 +48,10 @@ policies:
       - "*dev*"
   - type: instance-age
     hours: 7
+  actions:
+    - type: mark-for-op
+      op: stop
+      days: 1
 
 - name: ec2-stop-tag-packer-after-x-days
   resource: ec2
@@ -60,24 +64,9 @@ policies:
   - type: instance-age
     hours: 3
 
-- name: ec2-stop-tag-dev-test-offhours
-    resource: ec2
-    filters:
-      - type: offhour
-        tag: downtime
-        onhour: 8
-        offhour: 20
-    actions:
-      - stop    
 - name: ec2-stop-instances-with-cleanup-tag
   resource: ec2
   filters:
     - "tag:Cleanup": present
   actions:
     - stop
-
-################################
-#####    Backup Policies   #####
-################################
-
-# See ebs.yml
