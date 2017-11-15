@@ -1,0 +1,25 @@
+policies:
+- name: remediate-extant-keys
+  description: |
+    Scan through all s3 buckets in an account and ensure all objects
+    are encrypted (default to AES256).
+  resource: s3
+  actions:
+    - encrypt-keys
+
+- name: ec2-require-non-public-and-encrypted-volumes
+  resource: ec2
+  description: |
+    Provision a lambda and cloud watch event target
+    that looks at all new instances and terminates those with
+    unencrypted volumes.
+  mode:
+    type: cloudtrail
+    events:
+        - RunInstances
+  filters:
+    - type: ebs
+      key: Encrypted
+      value: false
+  actions:
+    - stop

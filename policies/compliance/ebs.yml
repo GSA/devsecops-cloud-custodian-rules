@@ -1,0 +1,13 @@
+# Elastic Block Storage (EBS) Policies
+policies:
+
+####################################
+#####    Compliance Policies   #####
+####################################
+
+- name: ebs-instance-without-encryption-at-rest
+  description: Instances without encrypted EBS volumes
+  resource: ebs
+  filters:
+    - Encrypted: false
+    - "State.Name": running

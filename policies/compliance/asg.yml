@@ -1,0 +1,13 @@
+# Auto Scaling Group Policies
+policies:
+
+####################################
+#####    Compliance Policies   #####
+####################################
+
+- name: asg-older-image
+  resource: asg
+  comment: Look for any auto scaling groups using AMIs older than 30 days
+  filters:
+  - type: image-age
+    days: 30

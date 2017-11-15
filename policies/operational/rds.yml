@@ -1,0 +1,41 @@
+# Rational Database Service (RDS) Policies
+
+policies:
+
+#####################################
+#####    Operational Policies   #####
+##################################### 
+
+- name: rds-terminate-unencrypted-public
+  description: |
+    Terminate all unencrypted or publicly available RDS upon creation
+  resource: rds
+  mode:
+    type: cloudtrail
+    events:
+      - CreateDBInstance
+  filters:
+    - or:
+        - StorageEncrypted: false
+        - PubliclyAccessible: true
+  actions:
+    - type: delete
+      skip-snapshot: true
+
+- name: rds-prod-multi-az-remediate
+  resource: rds
+  description: |
+    Notify on all Prod RDS Instances that are Not Multi AZ setup.
+  mode:
+    type: cloudtrail
+    events:
+      - source: rds.amazonaws.com
+        event: CreateDBInstance
+        ids: "requestParameters.dBInstanceIdentifier"
+  filters:
+    - type: value
+      key: 'tag:Environment'
+      value: '^prod'
+      op: regex
+    - MultiAZ: false
+  #actions:   

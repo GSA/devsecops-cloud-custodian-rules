@@ -1,0 +1,65 @@
+# Identity and Access Management (IAM) Policies
+policies:
+
+####################################
+#####    Compliance Policies   #####
+####################################
+
+- name: iam-sgs-with-ingress-or-egress-with-default-groupname
+  resource: security-group
+  filters:
+   - type: value
+     key: GroupName
+     op: eq
+     value: "default"
+   - or:
+       - type: value
+         key: IpPermissions
+         value: not-null
+       - type: value
+         key: IpPermissionsEgress
+         value: not-null  
+  actions:
+  - type: notify
+    to:
+      - foo@bar.gov #required even though not needed in SNS
+    message: "Some sort of message"
+    transport:
+      type: sns
+      topic: arn:aws:sns:us-east-1:111111111:topic-ops
+
+- name: iam-password-policy-check
+  resource: account
+  description: Verifies password policy on account meets our requirements and notifies if not
+  region: us-east-1
+  filters:
+    - type: password-policy
+      key: MinimumPasswordLength
+      value: 14
+      op: less-than
+    - type: password-policy
+      key: RequireSymbols
+      value: false
+    - type: password-policy
+      key: RequireNumbers
+      value: false
+    - type: password-policy
+      key: RequireUppercaseCharacters
+      value: false
+    - type: password-policy
+      key: RequireLowercaseCharacters
+      value: false
+    - type: password-policy
+      key: PasswordReusePrevention
+      value: 2
+      op: less-than
+    - type: password-policy
+      key: MaxPasswordAge
+      value: 90
+      op: less-than
+    - type: password-policy
+      key: ExpirePasswords
+      value: false
+    - type: password-policy
+      key: HardExpiry
+      value: false

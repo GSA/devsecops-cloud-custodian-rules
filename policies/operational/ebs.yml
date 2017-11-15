@@ -1,0 +1,70 @@
+# Elastic Block Storage (EBS) Policies
+policies:
+
+######################################
+#####    Operational Policies   ######
+######################################
+- name: ebs-terminate-unencrypted-upon-creation
+  description: |
+    Terminate all unencrypted EBS volumes upon creation
+  resource: ebs
+  mode:
+    type: cloudtrail
+    events:
+      - CreateVolume
+  filters:
+    - Encrypted: false
+  actions:
+    - delete
+
+- name: ebs-copy-instance-tags-from-mounted-ec2
+  resource: ebs
+  filters:
+    - type: value
+      key: "Attachments[0].Device"
+      value: not-null
+  actions:
+    - type: copy-instance-tags
+      tags:
+      - App
+      - Env
+      - Owner
+      - Name
+
+- name: ebs-mark-unattached-deletion-for-op
+  resource: ebs
+  comments: |
+    Mark any unattached EBS volumes for deletion in 30 days.
+    Volumes set to not delete on instance termination do have
+    valid use cases as data drives, but 99% of the time they
+    appear to be just garbage creation.
+  filters:
+    - Attachments: []
+    - "tag:maid_status": absent
+  actions:
+    - type: mark-for-op
+      op: delete
+      days: 30
+
+- name: ebs-unmark-attached-deletion
+  resource: ebs
+  comments: |
+    Unmark any attached EBS volumes that were scheduled for deletion
+    if they are currently attached
+  filters:
+    - type: value
+      key: "Attachments[0].Device"
+      value: not-null
+    - "tag:maid_status": not-null
+  actions:
+    - unmark
+
+- name: ebs-delete-marked
+  resource: ebs
+  comments: |
+    Delete any attached EBS volumes that were scheduled for deletion
+  filters:
+    - type: marked-for-op
+      op: delete
+  actions:
+    - delete
