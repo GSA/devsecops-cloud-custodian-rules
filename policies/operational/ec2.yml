@@ -1,37 +1,6 @@
 # Elastic Compute Cloud (EC2) Policies
 policies:
 
-####################################
-#####    Compliance Policies   #####
-####################################
-
-- name: ec2-auto-tag-user-who-created-instance
-  resource: ec2
-  description: |
-    Tag any new instance with the
-    Creators ID and Principle ID.
-  mode:
-    type: cloudtrail
-    events:
-      - RunInstances
-  filters:
-    - tag:CreatorName: absent
-  actions:
-    - type: auto-tag-user
-      tag: Resource Contact
-      principal_id_tag: CreatorId
-
-- name: ec2-organization-tag-compliance
-  resource: ec2
-  comment: Report on total count of non compliant instances
-  filters:
-    - or:
-      - "tag:Name": absent
-      - "tag:Managed_by": absent
-      - "tag:Environment": absent
-    - not:
-      - "State.Name": terminated
-
 ######################################
 #####    Operational Policies   ######
 ######################################

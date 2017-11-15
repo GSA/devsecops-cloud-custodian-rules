@@ -1,18 +1,10 @@
 # Elastic Block Storage (EBS) Policies
 policies:
 
-####################################
-#####    Compliance Policies   #####
-####################################
-
-- name: ebs-instance-without-encryption-at-rest
-  description: Instances without encrypted EBS volumes
-  resource: ebs
-  filters:
-    - Encrypted: false
-    - "State.Name": running
-
-- name: terminate-unencrypted-ebs
+######################################
+#####    Operational Policies   ######
+######################################
+- name: ebs-terminate-unencrypted-upon-creation
   description: |
     Terminate all unencrypted EBS volumes upon creation
   resource: ebs
@@ -39,10 +31,7 @@ policies:
       - Owner
       - Name
 
-######################################
-#####    Cost Savings Policies   #####
-######################################
-- name: ebs-mark-unattached-deletion
+- name: ebs-mark-unattached-deletion-for-op
   resource: ebs
   comments: |
     Mark any unattached EBS volumes for deletion in 30 days.
@@ -79,7 +68,3 @@ policies:
       op: delete
   actions:
     - delete
-
-################################
-#####    Backup Policies   #####
-################################

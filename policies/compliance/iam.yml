@@ -63,19 +63,3 @@ policies:
     - type: password-policy
       key: HardExpiry
       value: false
-  actions:
-  - type: notify
-    to:
-      - foo@bar.gov #required even though not needed in SNS
-    message: "Some sort of message"
-    transport:
-      type: sns
-      topic: arn:aws:sns:us-east-1:111111111:topic-ops    
-
-######################################
-#####    Cost Savings Policies   #####
-######################################
-
-################################
-#####    Backup Policies   #####
-################################
